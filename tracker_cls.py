@@ -1,9 +1,10 @@
 import os.path
 import csv
+from enum import Enum
 
 class Tracker:
 
-    #### Attributes: 
+    ### Attributes: 
     # Activity name
     def __init__(self, activity):
         self.activity = activity
@@ -20,6 +21,7 @@ class Tracker:
             self._activity = a.lower().strip()
         else: 
             raise ValueError("Activity name cannot be empty")
+    
     # file_path getter
     @property
     def file_path(self):
@@ -48,3 +50,31 @@ class Tracker:
                 writer = csv.writer(file)
                 writer.writerow(["date", "start", "end"])
                 return []
+
+    # Gets the mode, either Auto or Manual 
+    @staticmethod
+    def get_mode():
+        while True:
+            try:
+                choosen_mode = int(input((
+                    "\nChoose your preferred mode:\n"
+                    "1) Let the app do the tracking\n"
+                    "2) Insert the data manually\n"
+                    "Choice: " 
+                    )))
+            except ValueError: 
+                print("Please type a number, either 1 or 2")
+                continue
+            else: 
+                if choosen_mode not in range(1, 3):
+                    print("Please type a number, either 1 or 2")
+                    continue
+                return TrackingMode(choosen_mode)
+
+    # Starts an activity session
+    def start_session(self):
+        pass
+
+class TrackingMode(Enum):
+    AUTOMATIC = 1
+    MANUAL = 2

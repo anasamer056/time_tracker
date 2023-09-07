@@ -1,4 +1,4 @@
-from tracker_cls import Tracker
+from tracker_cls import Tracker, TrackingMode
 import pytest
 import tempfile
 from unittest.mock import patch
@@ -17,7 +17,7 @@ def test_read_from_memory():
 
     ### Test Case 1: File doesn't exist
     activity_name = "test"
-    test_file_path = f"fixtures/{activity_name}"
+    test_file_path = f"unit_tests/fixtures/{activity_name}"
     with patch.object(Tracker, "file_path", test_file_path):
         tracker1 = Tracker(activity_name)
         tracker1.read_from_memory()
@@ -26,7 +26,7 @@ def test_read_from_memory():
 
     ### Test Case 2: File exists
     activity_name_2 = "prewritten_data"
-    test_path_2 = f"fixtures/{activity_name_2}.csv"
+    test_path_2 = f"unit_tests/fixtures/{activity_name_2}.csv"
 
     # Arrange
     expected_data = []
@@ -40,10 +40,20 @@ def test_read_from_memory():
 
         # Act
         data = tracker2.read_from_memory()
-        
+
         # Assert
         assert data == expected_data
 
+def test_get_mode(): 
+    with patch('builtins.input', return_value='1'):
+        mode = Tracker.get_mode()
+        assert mode == TrackingMode.AUTOMATIC
+
+    with patch('builtins.input', return_value='2'):
+        mode = Tracker.get_mode()
+        assert mode == TrackingMode.MANUAL   
+    
+    
 
 
 
