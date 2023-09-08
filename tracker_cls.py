@@ -1,6 +1,7 @@
 import os.path
 import csv
 from enum import Enum
+import time
 
 class Tracker:
 
@@ -51,6 +52,11 @@ class Tracker:
                 writer.writerow(["date", "start", "end"])
                 return []
 
+    # Writes the date, start, end to memory
+    def write_to_memory(self, date, start, end):
+        with open(self.file_path, "a") as file:
+            writer = csv.DictWriter(file, fieldnames= ["date", "start", "end"])
+            writer.writerow({"date": date, "start": start, "end": end})  
     # Gets the mode, either Auto or Manual 
     @staticmethod
     def get_mode():
@@ -73,8 +79,30 @@ class Tracker:
 
     # Starts an activity session
     def start_session(self):
-        pass
-
+        total_time = 0
+        while True:
+            try:
+                total_time = int(input("How long would you like your session to last? (In numeral minutes. e.g. 25, 40) "))
+                break
+            except ValueError: 
+                continue
+        
+        while True:
+            answer = input("Type start to start your pomodoro session")
+    
+    @staticmethod
+    def countdown(t):
+        t = t*60
+        while t:
+            mins, secs = divmod(t, 60)
+            timer = f'{mins:02d}:{secs:02d}'
+            print(timer, end='\r')
+            time.sleep(1)
+            t -= 1
+            yield t
+        
+            
+        
 class TrackingMode(Enum):
     AUTOMATIC = 1
     MANUAL = 2
