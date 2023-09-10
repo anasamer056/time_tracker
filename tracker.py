@@ -19,7 +19,6 @@ def main():
     choosen_mode = tracker.get_mode()
     if choosen_mode == TrackingMode.AUTOMATIC:
         tracker.start_session()
-        pass
 
     elif choosen_mode == TrackingMode.MANUAL:
 
