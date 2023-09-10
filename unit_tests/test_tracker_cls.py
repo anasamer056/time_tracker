@@ -1,4 +1,5 @@
 from tracker_cls import Tracker, TrackingMode
+from datetime import date
 import pytest
 import tempfile
 from unittest.mock import patch
@@ -33,7 +34,10 @@ def test_read_from_memory():
     with open (test_path_2, "r") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            expected_data.append(row)
+            day = date.fromisoformat(row["date"])
+            start = int(row["start"])
+            end = int(row["end"])
+            expected_data.append({"date": day, "start": start, "end": end})
 
     with patch.object(Tracker, "file_path", test_path_2):
         tracker2 = Tracker(activity_name_2)
