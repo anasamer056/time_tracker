@@ -43,6 +43,8 @@ class Tracker:
 
     # Writes the activity name to memory
     def create_file(self):
+        if not os.path.exists("data/"):
+            os.mkdir("data/")
         with open(self.file_path, "x") as file:
            pass         
         
