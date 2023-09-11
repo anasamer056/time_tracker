@@ -64,12 +64,15 @@ class Stats:
             # Reading logic
             with open(self.file_path, 'r') as file: 
                 reader = csv.DictReader(file, fieldnames = self.headers)
-                for row in reader:
-                    self._streak = row["streak"]
-                    self._longest_streak = row["longest streak"]
-                    self._total_work = row["total work"]
-                    self._total_relax = row["total relax"]
+                if len(list(reader)) > 1:
+                    for row in reader:
+                        self._streak = int(row["streak"])
+                        self._longest_streak = int(row["longest streak"])
+                        self._total_work = int(row["total work"])
+                        self._total_relax = int(row["total relax"])
     
+            self.update_stats()
+
         else: 
             # Write for the first time
             with open(self.file_path, 'w') as file:
@@ -77,10 +80,9 @@ class Stats:
                 writer.writeheader()
             
     
-    def write_to_memory(self):
+    def update_stats(self):
         # Update the attributes
-        self._streak = self.get_streak()
-        self_longest_streak = self.streak if self.streak > self.longest_streak else self.logest_strek
+        self._streak, self._longest_streak = self.get_streak()
         self._total_work, self._total_relax = self.get_total_work_and_relax()
 
         with open(self.file_path, 'w') as file:
@@ -96,15 +98,21 @@ class Stats:
 
     def get_streak(self):
         days = list(map(lambda row: row["date"], self.clean_data))
-        streak = 1 if len(days) > 0  else 0
-
+        streak = longest_streak  = 1 if len(days) > 0  else 0
+        
         for i in range(len(days) - 1):
+            
             if days[i+1] - days[i] == timedelta(days=1):
                 streak += 1
+
+                if streak > longest_streak: 
+                    longest_streak = streak
             else:
                 streak = 1
         
-        return streak
+        return (streak, longest_streak)
+   
+        
     
     def get_total_work_and_relax(self):
         

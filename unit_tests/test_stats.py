@@ -25,7 +25,7 @@ def test_get_streak_true():
     
     with patch.object(Stats, "clean_data", clean_data):
         stats = Stats("test", clean_data) 
-        assert stats.get_streak() == 5
+        assert stats.get_streak() == (5,5)
 
 def test_get_streak_break():
     clean_data = [
@@ -38,7 +38,23 @@ def test_get_streak_break():
             ]
     with patch.object(Stats, "clean_data", clean_data):
         stats = Stats("test", clean_data) 
-        assert stats.get_streak() == 4
+        assert stats.get_streak() == (4,4)
+
+def test_get_streak_longest_is_bigger():
+    clean_data = [
+            {"date": date.fromisoformat("2023-09-10"), "work": 190, "relax": 60},
+            {"date": date.fromisoformat("2023-09-11"), "work": 150, "relax": 60},
+            {"date": date.fromisoformat("2023-09-12"), "work": 130, "relax": 60},
+            {"date": date.fromisoformat("2023-09-13"), "work": 150, "relax": 60},
+            {"date": date.fromisoformat("2023-09-14"), "work": 150, "relax": 60},
+            {"date": date.fromisoformat("2023-09-16"), "work": 150, "relax": 60}, 
+            {"date": date.fromisoformat("2023-09-17"), "work": 150, "relax": 60},
+            ]
+    with patch.object(Stats, "clean_data", clean_data):
+        stats = Stats("test", clean_data) 
+        assert stats.get_streak() == (2,5)
+
+
 
 def test_get_streak_single_day():
     clean_data = [
@@ -47,7 +63,7 @@ def test_get_streak_single_day():
 
     with patch.object(Stats, "clean_data", clean_data):
         stats = Stats("test", clean_data) 
-        assert stats.get_streak() == 1
+        assert stats.get_streak() == (1,1)
 
     
 def test_get_streak_zero():
@@ -55,7 +71,7 @@ def test_get_streak_zero():
    
     with patch.object(Stats, "clean_data", clean_data):
         stats = Stats("test", clean_data) 
-        assert stats.get_streak() == 0
+        assert stats.get_streak() == (0,0)
 
 def test_get_total_work():
     clean_data = [
