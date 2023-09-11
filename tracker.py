@@ -1,6 +1,7 @@
 from errors import DateError, TimeError
 from manual_input import ManualInput
 from tracker_cls import Tracker, TrackingMode
+from stats import Stats
 from datetime import date, time
 import sys
 from colorama import init
@@ -17,14 +18,19 @@ from colorama import init
 
 #& Refactor
 # Add attributes for the data inside the Tracker class instead of pass it as an argument
-# Move all the printing to main.py 
+# Move all the printing to main.py
+# Create a sparate folder for each activity to store the data and stats together
 
 def main():
     init(autoreset=True)
+
     activity = input("Activity to track: ")
     tracker = Tracker(activity)
+    stats = Stats(activity)
     data = tracker.read_from_memory()
-    print(data)
+    stats.read_from_memory()
+    print("data: ", data)
+    print("stats: ", [stats.streak, stats.longest_streak, stats.total_work, stats.total_relax])
     choosen_mode = tracker.get_mode()
     if choosen_mode == TrackingMode.AUTOMATIC:
         tracker.start_session()

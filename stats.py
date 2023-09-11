@@ -1,4 +1,6 @@
 from datetime import timedelta
+import os 
+import csv 
 
 class Stats:
     
@@ -6,6 +8,7 @@ class Stats:
         self.activity = activity
         self._file_path = f"data/{activity}_stats.csv"
         self._streak = 0
+        self._longest_streak = 0
         self._total_work = 0
         self._total_relax = 0
 
@@ -23,18 +26,58 @@ class Stats:
     @property
     def file_path(self):
         return self._file_path
+
+    @property
+    def streak(self):
+        return self._streak
+    
+    @property
+    def longest_streak(self):
+        return self._longest_streak
+
+    @property
+    def total_work(self):
+        return self._total_work
+    
+    @property
+    def total_relax(self):
+        return self._total_relax
         
     def read_from_memory(self):
-        pass
+        headers = ["streak", "longest streak", "total work", "total relax"]
+        try:
+            if not os.path.exists("data/"):
+                os.mkdir("data/")
+            with open(self.file_path, 'x') as _:
+                pass
+
+        except FileExistsError: 
+            # Reading logic
+            with open(self.file_path, 'r') as file: 
+                reader = csv.DictReader(file, fieldnames = headers)
+                for row in reader:
+                    self._streak = row["streak"]
+                    self._longest_streak = row["longest streak"]
+                    self._total_work = row["total work"]
+                    self._total_relax = row["total relax"]
+    
+        else: 
+            # Write for the first time
+            with open(self.file_path, 'w') as file:
+                writer = csv.DictWriter(file, fieldnames = headers)
+                writer.writeheader()
+            
     
     def write_to_memory(self):
-        pass
+        if not os.path.exists(self.file_path):
+            with open(self.file_path, 'x'):
+                return
+        else: 
+            #! TODO
+            pass
     
     def get_streak(self, clean_data: list):
-        days = []
-
         days = list(map(lambda row: row["date"], clean_data))
-        
         streak = 1 if len(days) > 0  else 0
 
         for i in range(len(days) - 1):
@@ -44,4 +87,6 @@ class Stats:
                 streak = 1
                 
         return streak
+
+    
         
