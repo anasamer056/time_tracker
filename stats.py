@@ -4,13 +4,19 @@ import csv
 
 class Stats:
     
-    def __init__(self, activity):
+    headers = ["streak", "longest streak", "total work", "total relax"]
+    
+    def __init__(self, activity, clean_data):
         self.activity = activity
+        self._clean_data = clean_data
         self._file_path = f"data/{activity}_stats.csv"
         self._streak = 0
         self._longest_streak = 0
         self._total_work = 0
         self._total_relax = 0
+
+        # Intialize the attributes from memory
+        self.read_from_memory()
 
     @property
     def activity(self):
@@ -28,6 +34,10 @@ class Stats:
         return self._file_path
 
     @property
+    def clean_data(self):
+        return self._clean_data
+
+    @property
     def streak(self):
         return self._streak
     
@@ -43,8 +53,7 @@ class Stats:
     def total_relax(self):
         return self._total_relax
         
-    def read_from_memory(self):
-        headers = ["streak", "longest streak", "total work", "total relax"]
+    def read_from_memory(self): 
         try:
             if not os.path.exists("data/"):
                 os.mkdir("data/")
@@ -54,7 +63,7 @@ class Stats:
         except FileExistsError: 
             # Reading logic
             with open(self.file_path, 'r') as file: 
-                reader = csv.DictReader(file, fieldnames = headers)
+                reader = csv.DictReader(file, fieldnames = self.headers)
                 for row in reader:
                     self._streak = row["streak"]
                     self._longest_streak = row["longest streak"]
@@ -64,20 +73,29 @@ class Stats:
         else: 
             # Write for the first time
             with open(self.file_path, 'w') as file:
-                writer = csv.DictWriter(file, fieldnames = headers)
+                writer = csv.DictWriter(file, fieldnames = self.headers)
                 writer.writeheader()
             
     
     def write_to_memory(self):
-        if not os.path.exists(self.file_path):
-            with open(self.file_path, 'x'):
-                return
-        else: 
-            #! TODO
-            pass
-    
-    def get_streak(self, clean_data: list):
-        days = list(map(lambda row: row["date"], clean_data))
+        # Update the attributes
+        self._streak = self.get_streak()
+        self_longest_streak = self.streak if self.streak > self.longest_streak else self.logest_strek
+        self._total_work, self._total_relax = self.get_total_work_and_relax()
+
+        with open(self.file_path, 'w') as file:
+            writer = csv.DictWriter(file, fieldnames = self.headers)
+            writer.writeheader()
+            to_write = {
+                    "streak": self.streak,
+                    "longest streak": self.longest_streak,
+                    "total work": self.total_work,
+                    "total relax": self.total_relax,
+                    }
+            writer.writerow(to_write)
+
+    def get_streak(self):
+        days = list(map(lambda row: row["date"], self.clean_data))
         streak = 1 if len(days) > 0  else 0
 
         for i in range(len(days) - 1):
@@ -85,8 +103,18 @@ class Stats:
                 streak += 1
             else:
                 streak = 1
-                
+        
         return streak
-
     
+    def get_total_work_and_relax(self):
+        
+        t_work = 0
+        t_relax = 0
+        
+        for row in self.clean_data:
+            t_work += row["work"]
+            t_relax += row["relax"]
+        
+        return (t_work, t_relax)
+        
         

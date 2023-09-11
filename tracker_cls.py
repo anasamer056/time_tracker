@@ -173,9 +173,9 @@ class Tracker:
 
         if not stop_event.is_set(): # Finished the countdown without stopping, so now we can write to memory
             if is_break:
-                self.write_to_memory(date.today(), 0, round(minutes/60, 2))
+                self.write_to_memory(date.today(), 0, max(1, round(minutes/60, 2)))
             else:
-                self.write_to_memory(date.today(), round(minutes/60, 2), 0)
+                self.write_to_memory(date.today(), max(1, round(minutes/60, 2)), 0)
             
     def get_unique_days(self, data: list):
         
