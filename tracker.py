@@ -5,12 +5,18 @@ from datetime import date, time
 import sys
 from colorama import init
 
-# Features to implement:
-# When the user starts an activity, start a timer in the UI 
+#^ Features to implement:
 # Sound a beep when you start 
-# Provide an option to work via pomodoros or freestyle 
-# A pomodoro could be of variable length
 # If this is the first time an activty is tracked, the user should specify a minimum number of hours to do it per day. 
+# Provide stats like the current streak, total hours of work and rest, 
+
+#! Bugs
+# Sort the array before cleaning it up 
+# Write it to memory again after cleaning it up
+# Revert back to minutes instead of seconds
+
+#& Refactor
+# Move all the printing to main.py 
 
 def main():
     init(autoreset=True)
