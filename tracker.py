@@ -12,6 +12,7 @@ from colorama import init
 # Provide stats like the current streak, total hours of work and rest, 
 
 #! Bugs
+# Test and fix the manual mode 
 # Sort the array before cleaning it up 
 # Write it to memory again after cleaning it up
 # Revert back to minutes instead of seconds
