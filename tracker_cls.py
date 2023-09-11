@@ -59,9 +59,9 @@ class Tracker:
                 data = []
                 for row in reader:
                     day = date.fromisoformat(row["date"])
-                    start = int(row["start"])
-                    end = int(row["end"])
-                    data.append({"date": day, "start": start, "end": end})
+                    work = int(row["work"])
+                    relax = int(row["relax"])
+                    data.append({"date": day, "work": work, "relax": relax})
                 unique_days = self.get_unique_days(data)
                 clean_data = self.cleanup(unique_days, data)
                 return clean_data
@@ -69,14 +69,14 @@ class Tracker:
             print("went down the creation path")
             with open(self.file_path, "w") as file: 
                 writer = csv.writer(file)
-                writer.writerow(["date", "start", "end"])
+                writer.writerow(["date", "work", "relax"])
                 return []
 
-    # Writes the date, start, end to memory
-    def write_to_memory(self, date, start, end):
+    # Writes the date, work, relax to memory
+    def write_to_memory(self, date, work, relax):
         with open(self.file_path, "a") as file:
-            writer = csv.DictWriter(file, fieldnames= ["date", "start", "end"])
-            writer.writerow({"date": date, "start": start, "end": end})  
+            writer = csv.DictWriter(file, fieldnames= ["date", "work", "relax"])
+            writer.writerow({"date": date, "work": work, "relax": relax})  
     
     # Gets the mode, either Auto or Manual 
     @staticmethod
@@ -190,11 +190,11 @@ class Tracker:
     def cleanup(self, unique_days: list, sorted_data: list):
         clean_data = []
         for i in range(len(unique_days)):
-            clean_data.append({"date": unique_days[i], "start": 0, "end": 0})
+            clean_data.append({"date": unique_days[i], "work": 0, "relax": 0})
             for j in range(len(sorted_data)):
                 if sorted_data[j]["date"] == unique_days[i]:
-                    clean_data[i]["start"] += sorted_data[j]["start"]
-                    clean_data[i]["end"] += sorted_data[j]["end"]
+                    clean_data[i]["work"] += sorted_data[j]["work"]
+                    clean_data[i]["relax"] += sorted_data[j]["relax"]
         
         return clean_data
         

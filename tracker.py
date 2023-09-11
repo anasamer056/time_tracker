@@ -26,11 +26,10 @@ def main():
 
         while True:
             input_date = input("Date (YYYY-MM-DD): ")
-            input_start = input("When did you start? (HH:MM:SS) ")
-            input_end = input("When did you finish? (HH:MM:SS) ")
+            input_work = input("How many minutes did you work? ")
             try:
-                user_input = ManualInput(date = input_date, start=input_start , end=input_end)
-                user_input.write_to_memory(file_path=tracker.file_path)
+                user_input = ManualInput(input_date, input_work)
+                user_input.write_to_memory(tracker.file_path)
                 break
             except DateError as e:
                 print(e.message)

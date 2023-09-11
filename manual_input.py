@@ -4,10 +4,10 @@ from errors import DateError, TimeError
 from datetime import date, time, datetime
 
 class ManualInput:
-    def __init__(self, date, start, end) -> None:
+    def __init__(self, date, work, relax='0') -> None:
         self.date = date
-        self.start = start
-        self.end = end
+        self.work = work
+        self.relax = relax
 
     @property 
     def date(self):
@@ -21,30 +21,30 @@ class ManualInput:
             raise DateError
     
     @property
-    def start(self):
-        return self._start
+    def work(self):
+        return self._work
 
-    @start.setter
-    def start(self, s):
+    @work.setter
+    def work(self, s):
         try: 
-            self._start = int(s)	
+            self._work = int(s)	
         except ValueError:
             raise TimeError    
         
     @property
-    def end(self):
-        return self._end
+    def relax(self):
+        return self._relax
 
-    @end.setter
-    def end(self, e):
+    @relax.setter
+    def relax(self, e):
         try: 
-            self._end = int(e)	
+            self._relax = int(e)	
         except ValueError:
             raise TimeError  
         
     def write_to_memory(self, file_path): 
         with open(file_path, "a") as file: 
-            writer = csv.DictWriter(file, fieldnames= ["date", "start", "end"])
-            writer.writerow({"date": self.date, "start": self.start, "end": self.end})  
+            writer = csv.DictWriter(file, fieldnames= ["date", "work", "relax"])
+            writer.writerow({"date": self.date, "work": self.work, "relax": self.relax})  
 
     
