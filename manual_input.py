@@ -27,7 +27,7 @@ class ManualInput:
     @start.setter
     def start(self, s):
         try: 
-            self._start = time.fromisoformat(s)	
+            self._start = int(s)	
         except ValueError:
             raise TimeError    
         
@@ -38,7 +38,7 @@ class ManualInput:
     @end.setter
     def end(self, e):
         try: 
-            self._end = time.fromisoformat(e)	
+            self._end = int(e)	
         except ValueError:
             raise TimeError  
         

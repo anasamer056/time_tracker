@@ -3,6 +3,7 @@ from manual_input import ManualInput
 from tracker_cls import Tracker, TrackingMode
 from datetime import date, time
 import sys
+from colorama import init
 
 # Features to implement:
 # When the user starts an activity, start a timer in the UI 
@@ -11,7 +12,8 @@ import sys
 # A pomodoro could be of variable length
 # If this is the first time an activty is tracked, the user should specify a minimum number of hours to do it per day. 
 
-def main(): 
+def main():
+    init(autoreset=True)
     activity = input("Activity to track: ")
     tracker = Tracker(activity)
     data = tracker.read_from_memory()
