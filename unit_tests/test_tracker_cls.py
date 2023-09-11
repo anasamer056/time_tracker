@@ -35,9 +35,9 @@ def test_read_from_memory():
         reader = csv.DictReader(file)
         for row in reader:
             day = date.fromisoformat(row["date"])
-            start = int(row["start"])
-            end = int(row["end"])
-            expected_data.append({"date": day, "start": start, "end": end})
+            start = int(row["work"])
+            end = int(row["relax"])
+            expected_data.append({"date": day, "work": start, "relax": end})
 
     with patch.object(Tracker, "file_path", test_path_2):
         tracker2 = Tracker(activity_name_2)

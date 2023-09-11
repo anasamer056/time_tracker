@@ -16,6 +16,7 @@ from colorama import init
 # Revert back to minutes instead of seconds
 
 #& Refactor
+# Add attributes for the data inside the Tracker class instead of pass it as an argument
 # Move all the printing to main.py 
 
 def main():
