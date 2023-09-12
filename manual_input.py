@@ -1,7 +1,7 @@
 import csv
 import datetime
 from errors import DateError, TimeError
-from datetime import date, time, datetime
+import datetime 
 
 class ManualInput:
     def __init__(self, date, work, relax='0') -> None:
@@ -16,7 +16,7 @@ class ManualInput:
     @date.setter
     def date(self, d):
         try: 
-            self._date = datetime.strptime(d, "%m-%d").replace(year=date.today().year).date()	
+            self._date = datetime.datetime.strptime(d, "%m-%d").replace(year=datetime.date.today().year).date()	
         except ValueError:
             raise DateError
     
