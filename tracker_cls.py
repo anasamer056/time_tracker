@@ -136,7 +136,7 @@ class Tracker:
         
     def pomodoro_handler(self, total_time, stop_event, pause_event):
         while True:
-            user_input = input(f"Enter {Fore.MAGENTA}'s' {Fore.RESET}to stop, {Fore.MAGENTA}'p' {Fore.RESET}to pause/unpause. \n\n")
+            user_input = input(f"Enter 's' to stop, 'p' to pause/unpause. \n\n")
             if user_input == 's':
                 stop_event.set()  # Set the stop event to signal the timer to stop
                 break
