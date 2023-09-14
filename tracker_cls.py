@@ -63,7 +63,8 @@ class Tracker:
                     relax = int(row["relax"])
                     data.append({"date": day, "work": work, "relax": relax})
                 unique_days = self.get_unique_days(data)
-                clean_data = self.cleanup(unique_days, data)
+                clean_data = self.cleanup(unique_days, self.sort(data))
+                self.write_clean_data(clean_data)
                 return clean_data
         else: 
             print("went down the creation path")
@@ -78,6 +79,12 @@ class Tracker:
             writer = csv.DictWriter(file, fieldnames= ["date", "work", "relax"])
             writer.writerow({"date": date, "work": work, "relax": relax})  
     
+    def write_clean_data(self, clean_data):
+        with open(self.file_path, "w") as file:
+            writer = csv.DictWriter(file, fieldnames= ["date", "work", "relax"])
+            writer.writeheader()
+            writer.writerows(clean_data)
+
     # Gets the mode, either Auto or Manual 
     @staticmethod
     def get_mode():
@@ -198,5 +205,6 @@ class Tracker:
         
         return clean_data
         
-
-
+    def sort(self, data: list):
+        return sorted(data, key=lambda row: row["date"])
+        
