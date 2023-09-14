@@ -24,7 +24,7 @@ from colorama import init
 # Create a sparate folder for each activity to store the data and stats together
 
 def main():
-    init(autoreset=True)
+    init(autoreset=True) # type: ignore
 
     activity = input("Activity to track: ")
     tracker = Tracker(activity)

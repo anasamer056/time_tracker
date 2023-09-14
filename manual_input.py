@@ -16,9 +16,15 @@ class ManualInput:
     @date.setter
     def date(self, d):
         try: 
-            self._date = datetime.strptime(d, "%m-%d").replace(year=date.today().year).date()	
+            d = datetime.strptime(d, "%m-%d").replace(year=date.today().year).date()	 # type: ignore                
         except ValueError:
-            raise DateError
+            raise DateError("Date isn't in ISO format (YYYY-MM-DD)")
+        else: 
+            if d > date.today():
+                raise DateError("Date cannot be later than today's date")
+            else: 
+                self._date = d
+
     
     @property
     def work(self):
