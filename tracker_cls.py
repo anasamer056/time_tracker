@@ -4,6 +4,7 @@ from enum import Enum
 import time
 import threading
 from datetime import date
+from playsound import playsound
 from colorama import Fore, Back, Style
 
 
@@ -128,7 +129,7 @@ class Tracker:
         # Thread events to control the flow
         stop_event = threading.Event()  # Event to signal when to stop the timer
         pause_event = threading.Event()  # Event to signal when to pause the timer
-               
+    
         handler_thread = threading.Thread(target=self.pomodoro_handler, args=(session_time, stop_event, pause_event), daemon=True)
         handler_thread.start()
         time.sleep(0.1)
@@ -159,6 +160,8 @@ class Tracker:
     def timer(self, minutes: int, stop_event: threading.Event, pause_event, timer_type: TimerType, is_break: bool = False, session_num = 0):
         # seconds = minutes * 60
         seconds = minutes
+        sound_thread = threading.Thread(target=playsound, args=('assets/notification.mp3',), daemon=True)
+        sound_thread.start()
 
         if stop_event.is_set():
             return
