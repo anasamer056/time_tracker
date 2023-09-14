@@ -35,9 +35,9 @@ def test_read_from_memory():
         reader = csv.DictReader(file)
         for row in reader:
             day = date.fromisoformat(row["date"])
-            start = int(row["start"])
-            end = int(row["end"])
-            expected_data.append({"date": day, "start": start, "end": end})
+            start = int(row["work"])
+            end = int(row["relax"])
+            expected_data.append({"date": day, "work": start, "relax": end})
 
     with patch.object(Tracker, "file_path", test_path_2):
         tracker2 = Tracker(activity_name_2)
@@ -58,7 +58,65 @@ def test_get_mode():
         assert mode == TrackingMode.MANUAL   
     
     
+def test_sort():
+    tracker = Tracker("Test")
+    # Arrange
+    test_data = [
+        {
+            "date": date.fromisoformat("2023-09-09"),
+            "work": 2,
+            "relax": 2, 
+        },
+        {
+            "date": date.fromisoformat("2023-09-04"),
+            "work": 0,
+            "relax": 0, 
+        },
+        {
+            "date": date.fromisoformat("2023-09-07"),
+            "work": 1,
+            "relax": 1, 
+        },
+        {
+            "date": date.fromisoformat("2023-09-15"),
+            "work": 4,
+            "relax": 4, 
+        },
+        {
+            "date": date.fromisoformat("2023-09-11"),
+            "work": 3,
+            "relax": 3, 
+        },
 
-
-
-
+    ]
+    correct_output = [
+        {
+            "date": date.fromisoformat("2023-09-04"),
+            "work": 0,
+            "relax": 0, 
+        },
+        {
+            "date": date.fromisoformat("2023-09-07"),
+            "work": 1,
+            "relax": 1, 
+        },
+        {
+            "date": date.fromisoformat("2023-09-09"),
+            "work": 2,
+            "relax": 2, 
+        },
+        {
+            "date": date.fromisoformat("2023-09-11"),
+            "work": 3,
+            "relax": 3, 
+        },
+         {
+            "date": date.fromisoformat("2023-09-15"),
+            "work": 4,
+            "relax": 4, 
+        },
+    ]
+    # Act 
+    test_output = tracker.sort(test_data)
+    # Assert 
+    assert test_output == correct_output

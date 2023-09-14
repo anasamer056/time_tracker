@@ -4,6 +4,7 @@ from enum import Enum
 import time
 import threading
 from datetime import date
+from playsound import playsound
 from colorama import Fore, Back, Style
 
 
@@ -63,7 +64,8 @@ class Tracker:
                     relax = int(row["relax"])
                     data.append({"date": day, "work": work, "relax": relax})
                 unique_days = self.get_unique_days(data)
-                clean_data = self.cleanup(unique_days, data)
+                clean_data = self.cleanup(unique_days, self.sort(data))
+                self.write_clean_data(clean_data)
                 return clean_data
         else: 
             print("went down the creation path")
@@ -78,6 +80,12 @@ class Tracker:
             writer = csv.DictWriter(file, fieldnames= ["date", "work", "relax"])
             writer.writerow({"date": date, "work": work, "relax": relax})  
     
+    def write_clean_data(self, clean_data):
+        with open(self.file_path, "w") as file:
+            writer = csv.DictWriter(file, fieldnames= ["date", "work", "relax"])
+            writer.writeheader()
+            writer.writerows(clean_data)
+
     # Gets the mode, either Auto or Manual 
     @staticmethod
     def get_mode():
@@ -121,7 +129,7 @@ class Tracker:
         # Thread events to control the flow
         stop_event = threading.Event()  # Event to signal when to stop the timer
         pause_event = threading.Event()  # Event to signal when to pause the timer
-               
+    
         handler_thread = threading.Thread(target=self.pomodoro_handler, args=(session_time, stop_event, pause_event), daemon=True)
         handler_thread.start()
         time.sleep(0.1)
@@ -136,7 +144,7 @@ class Tracker:
         
     def pomodoro_handler(self, total_time, stop_event, pause_event):
         while True:
-            user_input = input(f"Enter {Fore.MAGENTA}'s' {Fore.RESET}to stop, {Fore.MAGENTA}'p' {Fore.RESET}to pause/unpause. \n\n")
+            user_input = input(f"Enter 's' to stop, 'p' to pause/unpause. \n\n")
             if user_input == 's':
                 stop_event.set()  # Set the stop event to signal the timer to stop
                 break
@@ -152,6 +160,8 @@ class Tracker:
     def timer(self, minutes: int, stop_event: threading.Event, pause_event, timer_type: TimerType, is_break: bool = False, session_num = 0):
         # seconds = minutes * 60
         seconds = minutes
+        sound_thread = threading.Thread(target=playsound, args=('assets/notification.mp3',), daemon=True)
+        sound_thread.start()
 
         if stop_event.is_set():
             return
@@ -173,9 +183,9 @@ class Tracker:
 
         if not stop_event.is_set(): # Finished the countdown without stopping, so now we can write to memory
             if is_break:
-                self.write_to_memory(date.today(), 0, round(minutes/60, 2))
+                self.write_to_memory(date.today(), 0, max(1, round(minutes/60, 2)))
             else:
-                self.write_to_memory(date.today(), round(minutes/60, 2), 0)
+                self.write_to_memory(date.today(), max(1, round(minutes/60, 2)), 0)
             
     def get_unique_days(self, data: list):
         
@@ -198,5 +208,6 @@ class Tracker:
         
         return clean_data
         
-
-
+    def sort(self, data: list):
+        return sorted(data, key=lambda row: row["date"])
+        
