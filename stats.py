@@ -9,7 +9,7 @@ class Stats:
     def __init__(self, activity, clean_data):
         self.activity = activity
         self._clean_data = clean_data
-        self._file_path = f"data/{activity}_stats.csv"
+        self._file_path = f"data/{self.activity}/{self.activity}_stats.csv"
         self._streak = 0
         self._longest_streak = 0
         self._total_work = 0
@@ -57,6 +57,8 @@ class Stats:
         try:
             if not os.path.exists("data/"):
                 os.mkdir("data/")
+            if not os.path.exists(f"data/{self.activity}"):
+                os.mkdir(f"data/{self.activity}")
             with open(self.file_path, 'x') as _:
                 pass
 
@@ -97,7 +99,7 @@ class Stats:
             writer.writerow(to_write)
 
     def get_streak(self):
-        days = list(map(lambda row: row["date"], self.clean_data))
+        days = list(map(lambda row: row["date"], self.clean_data)) #type: ignore
         streak = longest_streak  = 1 if len(days) > 0  else 0
         
         for i in range(len(days) - 1):

@@ -4,11 +4,9 @@ from tracker_cls import Tracker, TrackingMode
 from stats import Stats
 from datetime import date, time
 import sys
-from colorama import init
+from colorama import init, Fore
+from tabulate import tabulate #type: ignore
 
-#^ Features to implement:
-# Show a sys notification
-# If this is the first time an activty is tracked, the user should specify a minimum number of hours to do it per day. 
 
 #! Bugs
 # Revert back to minutes instead of seconds
@@ -21,15 +19,21 @@ from colorama import init
 # Rename "relax" to "rest"
 
 def main():
-    init(autoreset=True) # type: ignore
+    init(autoreset=True)
 
     activity = input("Activity to track: ")
     tracker = Tracker(activity)
     
     clean_data = tracker.read_from_memory()
     stats = Stats(activity, clean_data)
-    print("data: ", clean_data)
-    print("stats: ", [stats.streak, stats.longest_streak, stats.total_work, stats.total_relax])
+    stats_table = [{
+        Fore.YELLOW + "Current Streak": stats.streak, 
+        "Longest Streak": stats.longest_streak,
+        "Total Work Time": stats.total_work, 
+        "Total Break Time" + Fore.RESET :stats.total_relax,
+        }]
+
+    print(tabulate(stats_table, headers="keys", tablefmt="pretty"))
     choosen_mode = tracker.get_mode()
     if choosen_mode == TrackingMode.AUTOMATIC:
         tracker.start_session()

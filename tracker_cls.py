@@ -23,7 +23,7 @@ class Tracker:
     # Activity name
     def __init__(self, activity):
         self.activity = activity
-        self._file_path = f"data/{self.activity}.csv"
+        self._file_path = f"data/{self.activity}/{self.activity}.csv"
 
     # Activtiy setter and getter 
     @property 
@@ -46,6 +46,8 @@ class Tracker:
     def create_file(self):
         if not os.path.exists("data/"):
             os.mkdir("data/")
+        if not os.path.exists(f"data/{self.activity}"):
+            os.mkdir(f"data/{self.activity}")
         with open(self.file_path, "x") as file:
            pass         
         
@@ -54,7 +56,6 @@ class Tracker:
         try:
             self.create_file() 
         except FileExistsError:
-            print("went down the reading path") 
             with open(self.file_path, "r") as file:
                 reader = csv.DictReader(file)
                 data = []
@@ -68,7 +69,6 @@ class Tracker:
                 self.write_clean_data(clean_data)
                 return clean_data
         else: 
-            print("went down the creation path")
             with open(self.file_path, "w") as file: 
                 writer = csv.writer(file)
                 writer.writerow(["date", "work", "relax"])
@@ -158,8 +158,7 @@ class Tracker:
             
 
     def timer(self, minutes: int, stop_event: threading.Event, pause_event, timer_type: TimerType, is_break: bool = False, session_num = 0):
-        # seconds = minutes * 60
-        seconds = minutes
+        seconds = minutes * 60
         sound_thread = threading.Thread(target=playsound, args=('assets/notification.mp3',), daemon=True)
         sound_thread.start()
 
